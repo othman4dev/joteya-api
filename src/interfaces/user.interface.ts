@@ -3,8 +3,13 @@ export interface UserInterface {
   name: string;
   email: string;
   password: string;
-  favorites: string[] | null;
   role: string;
+  phone: string;
+  bio?: string;
+  avatar?: string;
+  banner?: string;
+  theme?: string[];
+  authentic?: boolean;
   verified: boolean;
   code?: number;
   createdAt?: Date;

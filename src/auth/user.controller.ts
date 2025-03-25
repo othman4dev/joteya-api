@@ -1,4 +1,13 @@
-import { Controller, Post, Body, Get, Request, Param } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  Get,
+  Request,
+  Put,
+  Param,
+  UseInterceptors,
+} from '@nestjs/common';
 import { UserService } from './user.service';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
@@ -7,6 +16,8 @@ import { ResetDto } from './dto/reset.dto';
 import { NewPasswordDto } from './dto/new-password.dto';
 import { VerifyResetDto } from './dto/verify-reset.dto';
 import { CodeDto } from './dto/code.dto';
+import { FilesInterceptor } from '@nestjs/platform-express';
+import { UploadedFiles } from '@nestjs/common';
 
 @Controller('auth')
 export class UserController {
@@ -20,6 +31,11 @@ export class UserController {
   @Post('register')
   async register(@Body() registerDto: RegisterDto) {
     return this.userService.register(registerDto);
+  }
+
+  @Get('users')
+  async users() {
+    return this.userService.users();
   }
 
   @Post('verify')
@@ -45,5 +61,38 @@ export class UserController {
   @Get('reset/resend/:email')
   async resendCode(@Param('email') codeDto: CodeDto) {
     return this.userService.sendCode(codeDto.email);
+  }
+
+  @Get('token/verify/:token')
+  async verifyToken(@Param('token') token: string) {
+    return this.userService.verifyToken(token);
+  }
+
+  @Get('users/:id')
+  async getUser(@Param('id') id: string) {
+    return this.userService.getUser(id);
+  }
+
+  @Put('users/update/:token')
+  async updateUser(@Param('token') token: string, @Body() user: any) {
+    return this.userService.updateUser(token, user);
+  }
+
+  @Put('users/update/pp/:token')
+  @UseInterceptors(FilesInterceptor('avatar'))
+  async updateProfilePicture(
+    @Param('token') token: string,
+    @UploadedFiles() avatar: Express.Multer.File[],
+  ) {
+    return this.userService.updateProfilePicture(token, avatar);
+  }
+
+  @Put('users/update/bn/:id')
+  @UseInterceptors(FilesInterceptor('banner'))
+  async updateBanner(
+    @Param('id') id: string,
+    @UploadedFiles() banner: Express.Multer.File[],
+  ) {
+    return this.userService.updateBannerPicture(id, banner);
   }
 }
