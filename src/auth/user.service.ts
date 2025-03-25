@@ -15,7 +15,7 @@ import { NewPasswordDto } from './dto/new-password.dto';
 import { VerifyResetDto } from './dto/verify-reset.dto';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcryptjs';
-import { MailService } from 'src/mail/mail.service';
+import { MailService } from '../mail/mail.service';
 import { FileUploadService } from '../upload/upload.service';
 
 @Injectable()
